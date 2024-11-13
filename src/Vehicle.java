@@ -5,7 +5,7 @@ public interface Vehicle extends java.io.Serializable, Cloneable {
     public String[] getAllModelNames();
     public double[] getAllModelPrices();
     public void modelAdd(String newName, double newPrice) throws DuplicateModelNameException;
-    public void deliteModelByName(String name) throws NoSuchModelNameException;
+    public void deleteModelByName(String name) throws NoSuchModelNameException;
     public int getSize();
     public String getMark();
     public void setMark(String newName);

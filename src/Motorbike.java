@@ -175,7 +175,7 @@ public class Motorbike implements Vehicle {
         lastModifed = LocalDateTime.now();
     }
 
-    public void deliteModelByName(String name) throws NoSuchModelNameException {
+    public void deleteModelByName(String name) throws NoSuchModelNameException {
         Model delModel = findByName(name);
         if (delModel == null || delModel == head) {
             throw new NoSuchModelNameException("Такой модели нет");

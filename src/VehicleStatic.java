@@ -1,4 +1,7 @@
 import java.io.*;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Scanner;
 
 public class VehicleStatic {
     public static double arithmeticMean(Vehicle vehicle){
@@ -10,7 +13,7 @@ public class VehicleStatic {
     }
     public static void printAllModelWithPrice(Vehicle vehicle){
         for(int i = 0; i < vehicle.getSize(); i++){
-            System.out.println("Название: " + vehicle.getAllModelNames()[i] + " Стоимость :" + vehicle.getAllModelPrices()[i]);
+            System.out.println("Название: " + vehicle.getAllModelNames()[i] + " Стоимость: " + vehicle.getAllModelPrices()[i]);
         }
         System.out.println();
     }
@@ -62,34 +65,48 @@ public class VehicleStatic {
             case "class Car":
                 v = new Car(mark, models, prices);
                 break;
+            case "class Scooter":
+                v = new Scooter(mark, models, prices);
+                break;
+            case "class QuadBikeModel":
+                v = new QuadBike(mark, models, prices);
+                break;
+            case "class Moped":
+                v = new Moped(mark, models, prices);
+                break;
         }
         return v;
     }
     public static void writeVehicle(Vehicle vehicle, Writer out){
         PrintWriter printWriter = new PrintWriter(out);
-        printWriter.println(vehicle.getClass());
-        printWriter.println(vehicle.getMark());
-        printWriter.println(vehicle.getSize());
+        printWriter.printf("%s%n", vehicle.getClass());
+        printWriter.printf("%s%n", vehicle.getMark());
+        printWriter.printf("%d%n", vehicle.getSize());
         String[] models = vehicle.getAllModelNames();
         double[] prices = vehicle.getAllModelPrices();
         for(int i = 0; i < vehicle.getSize(); i++){
-            printWriter.println(models[i]);
-            printWriter.println(prices[i]);
+            printWriter.printf("%s%n", models[i]);
+            printWriter.printf("%.2f%n", prices[i]);
         }
         printWriter.flush();
     }
     public static Vehicle readVehicle(Reader in)throws IOException{
-        BufferedReader bf = new BufferedReader(in);
+        Scanner scanner = new Scanner(in);
         Vehicle v = null;
-        String vehicleClass = bf.readLine();
-        String vehicleName = bf.readLine();
-        int size = Integer.parseInt(bf.readLine());
+        String vehicleClass = scanner.nextLine();
+        String vehicleName = scanner.nextLine();
+        int size = scanner.nextInt();
+        scanner.nextLine();
         String[] models = new String[size];
         double[] prices = new double[size];
         for(int i = 0; i < size; i++){
-            models[i] = bf.readLine();
-            prices[i] = Double.parseDouble(bf.readLine());
+            models[i] = scanner.nextLine();
+            prices[i] = scanner.nextDouble();
+            if (scanner.hasNextLine()) {
+                scanner.nextLine();
+            }
         }
+        scanner.close();
         switch (vehicleClass) {
             case "class Motorbike":
                 v = new Motorbike(vehicleName, models, prices);
@@ -97,8 +114,35 @@ public class VehicleStatic {
             case "class Car":
                 v = new Car(vehicleName, models, prices);
                 break;
+            case "class Scooter":
+                v = new Scooter(vehicleName, models, prices);
+                break;
+            case "class QuadBikeModel":
+                v = new QuadBike(vehicleName, models, prices);
+                break;
+            case "class Moped":
+                v = new Moped(vehicleName, models, prices);
+                break;
         }
-      // bf.close();
         return v;
+    }
+    public static Vehicle createVehicle(String name, int size, Vehicle veh) throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException{
+        Class clazz = veh.getClass();
+        Constructor constructor = clazz.getConstructor(String.class, int.class);
+        Vehicle vehicle = (Vehicle)constructor.newInstance(name, size);
+        return vehicle;
+    } 
+
+    public static double arithmeticMean(Vehicle... veh){
+        double allPrice = 0;
+        int vehCount = 0;
+        for(Vehicle vehicle : veh){
+            double[] vehPrices = vehicle.getAllModelPrices();
+            vehCount += vehicle.getSize();
+            for(double price : vehPrices){
+                allPrice += price;
+            }
+        }
+        return vehCount == 0 ? 0 : allPrice/vehCount;
     }
 }

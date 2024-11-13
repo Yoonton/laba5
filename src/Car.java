@@ -25,7 +25,7 @@ public class Car implements Vehicle {
         carModels = new CarModel[markCount];
         Random rnd = new Random();
         for (int i = 0; i < markCount; i++) {
-            carModels[i] = new CarModel("Name: " + i, 1000 + (1000000 - 1000) * rnd.nextDouble());
+            carModels[i] = new CarModel("Name:" + i, 1000 + (1000000 - 1000) * rnd.nextDouble());
         }
     }
 
@@ -109,7 +109,7 @@ public class Car implements Vehicle {
         carModels[carModels.length - 1] = new CarModel(newName, newPrice);
     }
 
-    public void deliteModelByName(String name) throws NoSuchModelNameException {
+    public void deleteModelByName(String name) throws NoSuchModelNameException {
         int ind = 0;
         while (ind != carModels.length && !(carModels[ind].getModelName().equals(name))) {
             ind++;
@@ -187,14 +187,9 @@ public class Car implements Vehicle {
         return clone;
     }
 
-    public class CarModel implements Serializable {
+    private class CarModel implements Serializable {
         private String modelName = "";
         private double price;
-
-        public CarModel() {
-            modelName = "null";
-            price = Double.NaN;
-        }
 
         public CarModel(String modName, double pr) {
             modelName = modName;
@@ -216,14 +211,5 @@ public class Car implements Vehicle {
         public double getPrice() {
             return price;
         }
-
-        public void changeModel(String newModel) {
-            modelName = newModel;
-        }
-
-        public void changePrice(int newPrice) {
-            price = newPrice;
-        }
     }
-
 }
